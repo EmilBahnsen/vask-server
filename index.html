@@ -1,6 +1,31 @@
 <head>
-    <title>Wash Status</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#00aba9">
+    <meta name="theme-color" content="#ffffff">
+    <script>
+        // Language
+        const isDanish = navigator.language.substr(0,2) === 'da';
+        const sWash_ = isDanish ? 'Vask ' : 'Wash ';
+        const sDry_ = isDanish ? 'Tørre ' : 'Dry ';
+        document.title = isDanish ? 'Vaskestatus' : 'Wash Status'
+        function formatStatus(text) {
+            if (isDanish) {
+                text = text.replace('Idle', 'Ledig');
+                text = text.replace('Time left', 'Tid tilbage');
+                text = text.replace('RH', '\nResterende fugt');
+            } else {
+                text = text.replace('RH', '\nRemaining humidity');
+            }
+            return text
+        }
+    </script>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=.95">
+    <meta http-equiv="refresh" content="60">
     <style>
         table {
             border-collapse: collapse;
@@ -61,16 +86,16 @@
                 status_icon.appendChild(symbol);
                 const name = document.createElement('td');
                 if (machine['GroupNumber'] === 0) {
-                    name.innerHTML = 'Wash ' + nWash;
+                    name.innerHTML = sWash_ + nWash;
                     nWash++;
                     symbol.src = 'wash.svg';
                 } else if (machine['GroupNumber'] === 1) {
-                    name.innerHTML = 'Dry ' + nDry;
+                    name.innerHTML = sDry_ + nDry;
                     nDry++;
                     symbol.src = 'dry.svg';
                 }
                 const state = document.createElement('td');
-                state.innerHTML = machine['Text1'];
+                state.innerHTML = formatStatus(machine['Text1']);
                 if (machine['Text1'] === 'Idle') {
                     symbol.style = 'width: ' + symbol_size + 'px; background-color: green'
                 } else {
@@ -86,7 +111,6 @@
         }
         body.innerHTML = '';
         addRoom(states2);
-        // body.append(document.createElement('br'));
         addRoom(states1);
     }
 
