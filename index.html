@@ -16,9 +16,10 @@
             if (isDanish) {
                 text = text.replace('Idle', 'Ledig');
                 text = text.replace('Time left', 'Tid tilbage');
-                text = text.replace('RH', '\nResterende fugt');
+                text = text.replace('RH', '<br/>Resterende fugt');
+                text = text.replace('Busy', 'Optaget');
             } else {
-                text = text.replace('RH', '\nRemaining humidity');
+                text = text.replace('RH', '<br/>Remaining humidity');
             }
             return text
         }
@@ -36,7 +37,16 @@
             text-align: left;
             /*border-bottom: 1px solid #ddd;*/
         }
-        tr:hover {background-color:#f5f5f5;}
+        /*tr:hover {background-color:#f5f5f5;}*/
+
+        .unselectable {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
     <script>
     function loadJSON(path, success, error) {
@@ -72,7 +82,7 @@
             // Header
             const tr_header = document.createElement('tr');
             th_header = document.createElement('th');
-            th_header.colSpan = 3;
+            th_header.colSpan = 2;
             th_header.textContent = states['Location'];
             tr_header.appendChild(th_header);
             tbdy.appendChild(tr_header);
@@ -81,28 +91,40 @@
             for (var machine of states) {
                 const tr = document.createElement('tr');
                 const status_icon = document.createElement('td');
+                status_icon.style = 'position: relative; text-align: center; color: white; font-size: 20px;';
+                status_icon.style.padding = 0;
                 const symbol = document.createElement('img');
-                const symbol_size = 50;
+                symbol.width = 60;
+                const number = document.createElement('div');
                 status_icon.appendChild(symbol);
+                status_icon.appendChild(number);
                 const name = document.createElement('td');
                 if (machine['GroupNumber'] === 0) {
                     name.innerHTML = sWash_ + nWash;
+                    symbol.alt = sWash_ + nWash;
+                    number.innerHTML = nWash;
+                    number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -37%);';
                     nWash++;
                     symbol.src = 'wash.svg';
                 } else if (machine['GroupNumber'] === 1) {
                     name.innerHTML = sDry_ + nDry;
+                    symbol.alt = sWash_ + nWash;
+                    number.innerHTML = nDry;
+                    number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);';
                     nDry++;
                     symbol.src = 'dry.svg';
                 }
                 const state = document.createElement('td');
                 state.innerHTML = formatStatus(machine['Text1']);
                 if (machine['Text1'] === 'Idle') {
-                    symbol.style = 'width: ' + symbol_size + 'px; background-color: green'
+                    // symbol.style = 'width: ' + symbol_size + 'px; background-color: green'
+                    status_icon.style.backgroundColor = 'green';
                 } else {
-                    symbol.style = 'width: ' + symbol_size + 'px; background-color: red;'
+                    // symbol.style = 'width: ' + symbol_size + 'px; background-color: red;'
+                    status_icon.style.backgroundColor = 'red';
                 }
                 tr.appendChild(status_icon);
-                tr.appendChild(name);
+                // tr.appendChild(name);
                 tr.appendChild(state);
                 tbdy.appendChild(tr);
             }
@@ -126,6 +148,8 @@
         });
       }
     }
+
+
     </script>
 </head>
 <body>
