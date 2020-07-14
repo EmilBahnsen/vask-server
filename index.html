@@ -1,9 +1,9 @@
 <head>
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/resources/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/resources/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="mask-icon" href="/resources/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#00aba9">
     <meta name="theme-color" content="#ffffff">
     <script>
@@ -11,21 +11,28 @@
         const isDanish = navigator.language.substr(0,2) === 'da';
         const sWash_ = isDanish ? 'Vask ' : 'Wash ';
         const sDry_ = isDanish ? 'Tørre ' : 'Dry ';
-        document.title = isDanish ? 'Vaskestatus' : 'Wash Status'
+        document.title = isDanish ? 'Vaskestatus' : 'Wash Status';
         function formatStatus(text) {
+            timeLeft = text.match('([0-9]*) min');
+            timeLeft = (timeLeft && timeLeft.length === 2) ? timeLeft[1] : undefined;
+            humitidyLeft = text.match('RH: ([0-9]*)');
+            humitidyLeft = (humitidyLeft && humitidyLeft.length === 2) ? humitidyLeft[1] : undefined;
+            if (timeLeft) {
+                text = timeLeft + ' min';
+            }
+            if (humitidyLeft && humitidyLeft > 0) {
+                text += '<br/>' + humitidyLeft + '% humidity'
+            }
             if (isDanish) {
                 text = text.replace('Idle', 'Ledig');
-                text = text.replace('Time left', 'Tid tilbage');
-                text = text.replace('RH', '<br/>Resterende fugt');
                 text = text.replace('Busy', 'Optaget');
-            } else {
-                text = text.replace('RH', '<br/>Remaining humidity');
+                text = text.replace('humidity', 'fugt');
             }
             return text
         }
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=.95">
+    <meta name="viewport" content="width=device-width, initial-scale=.8">
     <meta http-equiv="refresh" content="60">
     <style>
         table {
@@ -107,14 +114,14 @@
                     number.innerHTML = nWash;
                     number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -37%);';
                     nWash++;
-                    symbol.src = 'wash.svg';
+                    symbol.src = 'resources/wash.svg';
                 } else if (machine['GroupNumber'] === 1) {
                     name.innerHTML = sDry_ + nDry;
                     symbol.alt = sWash_ + nWash;
                     number.innerHTML = nDry;
                     number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);';
                     nDry++;
-                    symbol.src = 'dry.svg';
+                    symbol.src = 'resources/dry.svg';
                 }
                 const state = document.createElement('td');
                 state.innerHTML = formatStatus(machine['Text1']);
@@ -138,8 +145,8 @@
         addRoom(states1);
     }
 
-    loadJSON('status1.json', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; nDone++; populateContent()}, (xhr) => console.log(xhr));
-    loadJSON('status2.json', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; nDone++; populateContent()}, (xhr) => console.log(xhr));
+    loadJSON('status/status1.json', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; nDone++; populateContent()}, (xhr) => console.log(xhr));
+    loadJSON('status/status2.json', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; nDone++; populateContent()}, (xhr) => console.log(xhr));
     Notification.requestPermission(function(status) {
         console.log('Notification permission status:', status);
     });
