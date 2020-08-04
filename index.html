@@ -72,12 +72,11 @@
         xhr.open("GET", path, true);
         xhr.send();
     }
-    var states1, states2;
-    let nDone = 0;
-
+    
+    var states1 = undefined, states2 = undefined;
     function populateContent() {
-        if (nDone !== 2) { return; }
-        const body = document.getElementsByTagName('body')[0];
+        const tables = document.getElementById('status-tables');
+        console.log(tables);
 
         function addRoom(states) {
             console.log(states);
@@ -138,29 +137,35 @@
                 tbdy.appendChild(tr);
             }
             tbl.appendChild(tbdy);
-            body.append(tbl);
+            tables.append(tbl);
         }
-        body.innerHTML = '';
-        addRoom(states2);
-        addRoom(states1);
+        tables.innerHTML = '';
+        if (states2) {
+            addRoom(states2);
+        }
+        if (states1) {
+            addRoom(states1);
+        }
     }
 
-    loadJSON('status/status1.json', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; nDone++; populateContent()}, (xhr) => console.log(xhr));
-    loadJSON('status/status2.json', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; nDone++; populateContent()}, (xhr) => console.log(xhr));
-    Notification.requestPermission(function(status) {
-        console.log('Notification permission status:', status);
-    });
-    function displayNotification() {
-      if (Notification.permission === 'granted') {
-        navigator.serviceWorker.getRegistration().then(function(reg) {
-          reg.showNotification('Hello world!');
-        });
-      }
-    }
-
-
+    loadJSON('status/status1.json', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; populateContent()},
+        (xhr) => document.body.innerHTML += '<br/>Could not load status for Finlandsgade 18.');
+    loadJSON('status/status2.json', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; populateContent()},
+        (xhr) => document.body.innerHTML += '<br/>Could not load status for Helsingforsgade 11.');
+    // Notification.requestPermission(function(status) {
+    //     console.log('Notification permission status:', status);
+    // });
+    // function displayNotification() {
+    //   if (Notification.permission === 'granted') {
+    //     navigator.serviceWorker.getRegistration().then(function(reg) {
+    //       reg.showNotification('Hello world!');
+    //     });
+    //   }
+    // }
     </script>
 </head>
 <body>
-Loading…
+    <div id='status-tables'>
+        Loading…
+    </div>
 </body>
