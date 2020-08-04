@@ -148,9 +148,9 @@
         }
     }
 
-    loadJSON('status/status1.json', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; populateContent()},
+    loadJSON('status/status1.json?nocache=123', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; populateContent()},
         (xhr) => document.body.innerHTML += '<br/>Could not load status for Finlandsgade 18.');
-    loadJSON('status/status2.json', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; populateContent()},
+    loadJSON('status/status2.json?nocache=123', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; populateContent()},
         (xhr) => document.body.innerHTML += '<br/>Could not load status for Helsingforsgade 11.');
     // Notification.requestPermission(function(status) {
     //     console.log('Notification permission status:', status);
