@@ -8,23 +8,21 @@
     <meta name="theme-color" content="#ffffff">
     <script>
         // Language
-		function localize (language) {
-			language = language.substr(0,2)
-		 	if (['en', 'da'].includes(language)) {
-		    	let lang = ':lang(' + language + ')';
-		    	let hide = '[lang]:not(' + lang + ')';
-			    document.querySelectorAll(hide).forEach(function (node) {
-			    	node.style.display = 'none';
-			    });
-			    let show = '[lang]' + lang;
-			    document.querySelectorAll(show).forEach(function (node) {
-			    	node.style.display = 'unset';
-			    });
-			}
-		}
-		document.addEventListener('DOMContentLoaded', function(){
-			localize(window.navigator.language);
-		}, false);
+        function localize (language) {
+            language = language.substr(0,2)
+            if (['en', 'da'].includes(language)) {
+                let lang = ':lang(' + language + ')';
+                let hide = '[lang]:not(' + lang + ')';
+                document.querySelectorAll(hide).forEach(function (node) {
+                    node.style.display = 'none';
+                });
+                let show = '[lang]' + lang;
+                document.querySelectorAll(show).forEach(function (node) {
+                    node.style.display = 'unset';
+                });
+            }
+        }
+
         const isDanish = navigator.language.substr(0,2) === 'da';
         const sWash_ = isDanish ? 'Vask ' : 'Wash ';
         const sDry_ = isDanish ? 'Tørre ' : 'Dry ';
@@ -47,6 +45,107 @@
             }
             return text
         }
+
+        function loadJSON(path, success, error) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        if (success)
+                            success(JSON.parse(xhr.responseText));
+                    } else {
+                        if (error)
+                            error(xhr);
+                    }
+                }
+            };
+            xhr.open("GET", path, true);
+            xhr.send();
+        }
+        
+        var states1 = undefined, states2 = undefined;
+        function populateContent() {
+            const tables = document.getElementById('status-tables');
+            console.log(tables);
+
+            function addRoom(states) {
+                console.log(states);
+                const tbl = document.createElement('table');
+                tbl.style = 'display: inline-block; margin: 0 15px 15px 0';
+                // tbl.style.width = '100%';
+                tbl.setAttribute('border', '1');
+                const tbdy = document.createElement('tbody');
+                // Header
+                const tr_header = document.createElement('tr');
+                th_header = document.createElement('th');
+                th_header.colSpan = 2;
+                th_header.textContent = states['Location'];
+                tr_header.appendChild(th_header);
+                tbdy.appendChild(tr_header);
+                // Body of table
+                let nMachine = 1;
+                for (var machine of states) {
+                    const tr = document.createElement('tr');
+                    const status_icon = document.createElement('td');
+                    status_icon.style = 'position: relative; text-align: center; color: white; font-size: 20px';
+                    status_icon.style.padding = 0;
+                    status_icon.width = 60;
+                    const symbol = document.createElement('img');
+                    symbol.width = 60;
+                    symbol.height = 60;
+                    const number = document.createElement('div');
+                    status_icon.appendChild(symbol);
+                    status_icon.appendChild(number);
+                    const name = document.createElement('td');
+                    if (machine['GroupNumber'] === 0) {
+                        name.innerHTML = sWash_ + nMachine;
+                        symbol.alt = sWash_ + nMachine;
+                        number.innerHTML = nMachine;
+                        number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -37%);';
+                        nMachine++;
+                        symbol.src = 'resources/wash.svg';
+                    } else if (machine['GroupNumber'] === 1) {
+                        name.innerHTML = sDry_ + nMachine;
+                        symbol.alt = sWash_ + nMachine;
+                        number.innerHTML = nMachine;
+                        number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);';
+                        nMachine++;
+                        symbol.src = 'resources/dry.svg';
+                    }
+                    const state = document.createElement('td');
+                    state.innerHTML = formatStatus(machine['Text1']);
+                    if (machine['Text1'] === 'Idle') {
+                        // symbol.style = 'width: ' + symbol_size + 'px; background-color: green'
+                        status_icon.style.backgroundColor = 'green';
+                    } else {
+                        // symbol.style = 'width: ' + symbol_size + 'px; background-color: red;'
+                        status_icon.style.backgroundColor = 'red';
+                    }
+                    tr.appendChild(status_icon);
+                    // tr.appendChild(name);
+                    tr.appendChild(state);
+                    tbdy.appendChild(tr);
+                }
+                tbl.appendChild(tbdy);
+                tables.append(tbl);
+            }
+            tables.innerHTML = '';
+            if (states2) {
+                addRoom(states2);
+            }
+            if (states1) {
+                addRoom(states1);
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function(){
+            localize(window.navigator.language);
+            loadJSON('status/status1.json?nocache=123', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; populateContent()},
+                (xhr) => document.body.innerHTML += '<br/>Could not load status for Finlandsgade 18.');
+            loadJSON('status/status2.json?nocache=123', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; populateContent()},
+                (xhr) => document.body.innerHTML += '<br/>Could not load status for Helsingforsgade 11.');
+        }, false);
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=.8">
@@ -72,120 +171,12 @@
             user-select: none;
         }
         [lang] {
-		  display: none;
-		}
-		[lang=en] {
-		  display: unset;
-		}
+          display: none;
+        }
+        [lang=en] {
+          display: unset;
+        }
     </style>
-    <script>
-    function loadJSON(path, success, error) {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    if (success)
-                        success(JSON.parse(xhr.responseText));
-                } else {
-                    if (error)
-                        error(xhr);
-                }
-            }
-        };
-        xhr.open("GET", path, true);
-        xhr.send();
-    }
-    
-    var states1 = undefined, states2 = undefined;
-    function populateContent() {
-        const tables = document.getElementById('status-tables');
-        console.log(tables);
-
-        function addRoom(states) {
-            console.log(states);
-            const tbl = document.createElement('table');
-            tbl.style = 'display: inline-block; margin: 0 15px 15px 0';
-            // tbl.style.width = '100%';
-            tbl.setAttribute('border', '1');
-            const tbdy = document.createElement('tbody');
-            // Header
-            const tr_header = document.createElement('tr');
-            th_header = document.createElement('th');
-            th_header.colSpan = 2;
-            th_header.textContent = states['Location'];
-            tr_header.appendChild(th_header);
-            tbdy.appendChild(tr_header);
-            // Body of table
-            let nMachine = 1;
-            for (var machine of states) {
-                const tr = document.createElement('tr');
-                const status_icon = document.createElement('td');
-                status_icon.style = 'position: relative; text-align: center; color: white; font-size: 20px';
-                status_icon.style.padding = 0;
-                status_icon.width = 60;
-                const symbol = document.createElement('img');
-                symbol.width = 60;
-                symbol.height = 60;
-                const number = document.createElement('div');
-                status_icon.appendChild(symbol);
-                status_icon.appendChild(number);
-                const name = document.createElement('td');
-                if (machine['GroupNumber'] === 0) {
-                    name.innerHTML = sWash_ + nMachine;
-                    symbol.alt = sWash_ + nMachine;
-                    number.innerHTML = nMachine;
-                    number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -37%);';
-                    nMachine++;
-                    symbol.src = 'resources/wash.svg';
-                } else if (machine['GroupNumber'] === 1) {
-                    name.innerHTML = sDry_ + nMachine;
-                    symbol.alt = sWash_ + nMachine;
-                    number.innerHTML = nMachine;
-                    number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);';
-                    nMachine++;
-                    symbol.src = 'resources/dry.svg';
-                }
-                const state = document.createElement('td');
-                state.innerHTML = formatStatus(machine['Text1']);
-                if (machine['Text1'] === 'Idle') {
-                    // symbol.style = 'width: ' + symbol_size + 'px; background-color: green'
-                    status_icon.style.backgroundColor = 'green';
-                } else {
-                    // symbol.style = 'width: ' + symbol_size + 'px; background-color: red;'
-                    status_icon.style.backgroundColor = 'red';
-                }
-                tr.appendChild(status_icon);
-                // tr.appendChild(name);
-                tr.appendChild(state);
-                tbdy.appendChild(tr);
-            }
-            tbl.appendChild(tbdy);
-            tables.append(tbl);
-        }
-        tables.innerHTML = '';
-        if (states2) {
-            addRoom(states2);
-        }
-        if (states1) {
-            addRoom(states1);
-        }
-    }
-
-    loadJSON('status/status1.json?nocache=123', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; populateContent()},
-        (xhr) => document.body.innerHTML += '<br/>Could not load status for Finlandsgade 18.');
-    loadJSON('status/status2.json?nocache=123', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; populateContent()},
-        (xhr) => document.body.innerHTML += '<br/>Could not load status for Helsingforsgade 11.');
-    // Notification.requestPermission(function(status) {
-    //     console.log('Notification permission status:', status);
-    // });
-    // function displayNotification() {
-    //   if (Notification.permission === 'granted') {
-    //     navigator.serviceWorker.getRegistration().then(function(reg) {
-    //       reg.showNotification('Hello world!');
-    //     });
-    //   }
-    // }
-    </script>
 </head>
 <body>
     <div id='status-tables'>
