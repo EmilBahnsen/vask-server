@@ -8,6 +8,23 @@
     <meta name="theme-color" content="#ffffff">
     <script>
         // Language
+		function localize (language) {
+			language = language.substr(0,2)
+		 	if (['en', 'da'].includes(language)) {
+		    	let lang = ':lang(' + language + ')';
+		    	let hide = '[lang]:not(' + lang + ')';
+			    document.querySelectorAll(hide).forEach(function (node) {
+			    	node.style.display = 'none';
+			    });
+			    let show = '[lang]' + lang;
+			    document.querySelectorAll(show).forEach(function (node) {
+			    	node.style.display = 'unset';
+			    });
+			}
+		}
+		document.addEventListener('DOMContentLoaded', function(){
+			localize(window.navigator.language);
+		}, false);
         const isDanish = navigator.language.substr(0,2) === 'da';
         const sWash_ = isDanish ? 'Vask ' : 'Wash ';
         const sDry_ = isDanish ? 'Tørre ' : 'Dry ';
@@ -54,6 +71,12 @@
             -ms-user-select: none;
             user-select: none;
         }
+        [lang] {
+		  display: none;
+		}
+		[lang=en] {
+		  display: unset;
+		}
     </style>
     <script>
     function loadJSON(path, success, error) {
@@ -93,7 +116,7 @@
             tr_header.appendChild(th_header);
             tbdy.appendChild(tr_header);
             // Body of table
-            let nWash = 1, nDry = 1;
+            let nMachine = 1;
             for (var machine of states) {
                 const tr = document.createElement('tr');
                 const status_icon = document.createElement('td');
@@ -108,18 +131,18 @@
                 status_icon.appendChild(number);
                 const name = document.createElement('td');
                 if (machine['GroupNumber'] === 0) {
-                    name.innerHTML = sWash_ + nWash;
-                    symbol.alt = sWash_ + nWash;
-                    number.innerHTML = nWash;
+                    name.innerHTML = sWash_ + nMachine;
+                    symbol.alt = sWash_ + nMachine;
+                    number.innerHTML = nMachine;
                     number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -37%);';
-                    nWash++;
+                    nMachine++;
                     symbol.src = 'resources/wash.svg';
                 } else if (machine['GroupNumber'] === 1) {
-                    name.innerHTML = sDry_ + nDry;
-                    symbol.alt = sWash_ + nWash;
-                    number.innerHTML = nDry;
+                    name.innerHTML = sDry_ + nMachine;
+                    symbol.alt = sWash_ + nMachine;
+                    number.innerHTML = nMachine;
                     number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);';
-                    nDry++;
+                    nMachine++;
                     symbol.src = 'resources/dry.svg';
                 }
                 const state = document.createElement('td');
@@ -168,4 +191,5 @@
     <div id='status-tables'>
         Loading…
     </div>
+    <span lang='da'>Vasketips</span><span lang='en'>Washing tips</span>
 </body>
