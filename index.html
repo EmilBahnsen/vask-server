@@ -75,7 +75,14 @@
                 th_wash.textContent = 'Wash';
                 tr_wash.appendChild(th_wash);
                 thead.appendChild(tr_wash);
+                // Dry header
+                const tr_dry = document.createElement('tr');
+                th_dry = document.createElement('td');
+                th_dry.colSpan = 2;
+                th_dry.textContent = 'Wash';
+                tr_dry.appendChild(th_dry);
                 // Body of table
+                let dryHeaderHasBeenIncerted = false;
                 let nMachine = 1;
                 for (var machine of states) {
                     const tr = document.createElement('tr');
@@ -95,16 +102,19 @@
                         symbol.alt = sWash_ + nMachine;
                         number.innerHTML = nMachine;
                         number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -37%);';
-                        nMachine++;
                         symbol.src = 'resources/wash.svg';
                     } else if (machine['GroupNumber'] === 1) {
+                        if (!dryHeaderHasBeenIncerted) {
+                            thead.appendChild(tr_dry);
+                            dryHeaderHasBeenIncerted = true;
+                        }
                         name.innerHTML = sDry_ + nMachine;
                         symbol.alt = sWash_ + nMachine;
                         number.innerHTML = nMachine;
                         number.style = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);';
-                        nMachine++;
                         symbol.src = 'resources/dry.svg';
                     }
+                    nMachine++;
                     const state = document.createElement('td');
                     state.innerHTML = formatStatus(machine['Text1']);
                     if (machine['Text1'] === 'Idle') {
