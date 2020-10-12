@@ -60,13 +60,14 @@
                 // tbl.style.width = '100%';
                 tbl.setAttribute('border', '1');
                 const tbdy = document.createElement('tbody');
+                const thead = document.createElement('thead');
                 // Header
                 const tr_header = document.createElement('tr');
                 th_header = document.createElement('th');
                 th_header.colSpan = 2;
                 th_header.textContent = states['Location'];
                 tr_header.appendChild(th_header);
-                tbdy.appendChild(tr_header);
+                thead.appendChild(tr_header);
                 // Wash header
                 const tr_wash = document.createElement('tr');
                 th_wash = document.createElement('td');
@@ -118,6 +119,7 @@
                     tr.appendChild(state);
                     tbdy.appendChild(tr);
                 }
+                tbl.appendChild(tbody);
                 tbl.appendChild(tbdy);
                 tables.append(tbl);
             }
