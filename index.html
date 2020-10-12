@@ -59,8 +59,8 @@
                 tbl.style = 'display: inline-block; margin: 0 15px 15px 0';
                 // tbl.style.width = '100%';
                 tbl.setAttribute('border', '1');
-                const tbdy = document.createElement('tbody');
                 const thead = document.createElement('thead');
+                const thead = document.createElement('tbody');
                 // Header
                 const tr_header = document.createElement('tr');
                 th_header = document.createElement('th');
@@ -74,7 +74,7 @@
                 th_wash.colSpan = 2;
                 th_wash.textContent = 'Wash';
                 tr_wash.appendChild(th_wash);
-                tbdy.appendChild(tr_wash);
+                thead.appendChild(tr_wash);
                 // Body of table
                 let nMachine = 1;
                 for (var machine of states) {
@@ -117,10 +117,10 @@
                     tr.appendChild(status_icon);
                     // tr.appendChild(name);
                     tr.appendChild(state);
-                    tbdy.appendChild(tr);
+                    thead.appendChild(tr);
                 }
-                tbl.appendChild(tbody);
-                tbl.appendChild(tbdy);
+                tbl.appendChild(thead);
+                tbl.appendChild(thead);
                 tables.append(tbl);
             }
             tables.innerHTML = '';
