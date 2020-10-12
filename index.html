@@ -69,7 +69,7 @@
                 tbdy.appendChild(tr_header);
                 // Wash header
                 const tr_wash = document.createElement('tr');
-                th_wash = document.createElement('th');
+                th_wash = document.createElement('td');
                 th_wash.colSpan = 2;
                 th_wash.textContent = 'Wash';
                 tr_wash.appendChild(th_wash);
@@ -133,10 +133,10 @@
 
         document.addEventListener('DOMContentLoaded', function(){
             localize(window.navigator.language);
-            loadJSON('status/status1.json?nocache=123', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; populateContent()},
-                (xhr) => document.body.innerHTML += '<br/>Could not load status for Finlandsgade 18.');
-            loadJSON('status/status2.json?nocache=123', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; populateContent()},
-                (xhr) => document.body.innerHTML += '<br/>Could not load status for Helsingforsgade 11.');
+            // loadJSON('status/status1.json?nocache=123', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; populateContent()},
+            //     (xhr) => document.body.innerHTML += '<br/>Could not load status for Finlandsgade 18.');
+            // loadJSON('status/status2.json?nocache=123', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; populateContent()},
+            //     (xhr) => document.body.innerHTML += '<br/>Could not load status for Helsingforsgade 11.');
         }, false);
     </script>
     <meta charset="UTF-8">
@@ -172,7 +172,12 @@
 </head>
 <body>
     <div id='status-tables'>
-        Loading…
+        <table>
+            <thead>Helsingforsgade 11</thead>
+        </table>
+        <table>
+            <thead>Finlandsgade 18</thead>
+        </table>
     </div>
     <a href='./tips.html' lang='da'>Vasketips</a><a href='./tips.html' lang='en'>Washing tips</a>
 </body>
