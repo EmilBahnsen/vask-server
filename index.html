@@ -71,15 +71,14 @@
                 // Wash header
                 const tr_wash = document.createElement('tr');
                 th_wash = document.createElement('td');
-                th_wash.colSpan = 2;
+                th_wash.class = 'wash-dry-header'
                 th_wash.textContent = 'Wash';
                 tr_wash.appendChild(th_wash);
                 thead.appendChild(tr_wash);
                 // Dry header
                 const tr_dry = document.createElement('tr');
                 th_dry = document.createElement('td');
-                th_dry.colSpan = 2;
-                th_dry.textContent = 'Wash';
+                th_dry.textContent = 'Dry';
                 tr_dry.appendChild(th_dry);
                 // Body of table
                 let dryHeaderHasBeenIncerted = false;
@@ -165,6 +164,10 @@
         thead {
             column-span: 2;
         }
+
+        .wash-dry-header {
+            column-span: 2;
+        };
 
         th, td {
             padding: 8px;
