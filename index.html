@@ -122,11 +122,9 @@
                     state.className = 'state-description';
                     state.innerHTML = formatStatus(machine['Text1']);
                     if (machine['Text1'] === 'Idle') {
-                        // symbol.style = 'width: ' + symbol_size + 'px; background-color: green'
-                        status_icon.style.backgroundColor = 'green';
+                        symbol.style.backgroundColor = 'green';
                     } else {
-                        // symbol.style = 'width: ' + symbol_size + 'px; background-color: red;'
-                        status_icon.style.backgroundColor = 'red';
+                        symbol.style.backgroundColor = 'red';
                     }
                     tr.appendChild(status_icon);
                     // tr.appendChild(name);
