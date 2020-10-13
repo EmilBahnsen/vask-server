@@ -119,7 +119,7 @@
                     }
                     nMachine++;
                     const state = document.createElement('td');
-                    state.className = 'state-text';
+                    state.className = 'state-description';
                     state.innerHTML = formatStatus(machine['Text1']);
                     if (machine['Text1'] === 'Idle') {
                         // symbol.style = 'width: ' + symbol_size + 'px; background-color: green'
@@ -177,7 +177,7 @@
             text-align: center;
         };
 
-        .state-text {
+        .state-description {
             padding: 8px;
             text-align: left;
         }
