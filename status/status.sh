@@ -20,7 +20,7 @@ curl -H "Authorization: Bearer "$token https://api.mielelogic.com/v3/Country/DA/
 timestamp=$(date +'%Y-%m-%d %T')
 last_record=$(tail -n 1 history.txt | cut -c 20- || echo '')
 
-record=$(python $local_path/makeRecord.py $local_path/status1.json $local_path/status2.json)
+record=$(python3 $local_path/makeRecord.py $local_path/status1.json $local_path/status2.json)
 echo $last_record
 echo $record
 
