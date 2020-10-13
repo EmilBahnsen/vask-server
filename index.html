@@ -74,7 +74,7 @@
                 th_wash = document.createElement('th');
                 th_wash.className = 'wash-dry-header';
                 th_wash.colSpan = 2;
-                th_wash.innerHTML = '<span lang="dk">Vask</span><span lang="en">Wash</span>';
+                th_wash.innerHTML = sWash_;
                 tr_wash.appendChild(th_wash);
                 thead.appendChild(tr_wash);
                 // Dry header
@@ -82,7 +82,7 @@
                 th_dry = document.createElement('th');
                 th_dry.className = 'wash-dry-header';
                 th_dry.colSpan = 2;
-                th_dry.innerHTML = '<span lang="dk">Tørre</span><span lang="en">Dry</span>';
+                th_dry.innerHTML = sDry_;
                 tr_dry.appendChild(th_dry);
                 // Body of table
                 let dryHeaderHasBeenIncerted = false;
@@ -146,11 +146,11 @@
 
 
         document.addEventListener('DOMContentLoaded', function(){
-            localize(window.navigator.language);
             loadJSON('status/status1.json?nocache=123', (data) => {states1 = data['MachineStates']; states1['Location'] = 'Finlandsgade 18'; populateContent()},
                 (xhr) => document.body.innerHTML += '<br/>Could not load status for Finlandsgade 18.');
             loadJSON('status/status2.json?nocache=123', (data) => {states2 = data['MachineStates']; states2['Location'] = 'Helsingforsgade 11'; populateContent()},
                 (xhr) => document.body.innerHTML += '<br/>Could not load status for Helsingforsgade 11.');
+            localize(window.navigator.language);
         }, false);
     </script>
     <meta charset="UTF-8">
