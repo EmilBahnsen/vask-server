@@ -64,6 +64,7 @@
                 // Header
                 const tr_header = document.createElement('tr');
                 th_header = document.createElement('th');
+                th_header.className = 'table-header';
                 th_header.colSpan = 2;
                 th_header.textContent = states['Location'];
                 tr_header.appendChild(th_header);
@@ -164,15 +165,15 @@
             margin: 0 15px 15px 0;
         }
 
+        .table-header {
+            padding: 8px;
+            text-align: center;
+        }
+
         .wash-dry-header {
             padding: 8px;
             text-align: center;
         };
-
-        th {
-            padding: 8px;
-            text-align: center;
-        }
 
         td {
             padding: 8px;
