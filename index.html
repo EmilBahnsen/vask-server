@@ -74,7 +74,7 @@
                 th_wash = document.createElement('th');
                 th_wash.className = 'wash-dry-header';
                 th_wash.colSpan = 2;
-                th_wash.textContent = '<span lang="dk">Vask</span><span lang="en">Wash</span>';
+                th_wash.innerHTML = '<span lang="dk">Vask</span><span lang="en">Wash</span>';
                 tr_wash.appendChild(th_wash);
                 thead.appendChild(tr_wash);
                 // Dry header
@@ -82,7 +82,7 @@
                 th_dry = document.createElement('th');
                 th_dry.className = 'wash-dry-header';
                 th_dry.colSpan = 2;
-                th_dry.textContent = '<span lang="dk">Tørre</span><span lang="en">Dry</span>';
+                th_dry.innerHTML = '<span lang="dk">Tørre</span><span lang="en">Dry</span>';
                 tr_dry.appendChild(th_dry);
                 // Body of table
                 let dryHeaderHasBeenIncerted = false;
