@@ -22,7 +22,7 @@ def makeRecord(filename):
 
 		record += ' ' + re.search('([0-9]*)(?= min)', text).group(0)
 		if not isWasher: # Dryer
-			humitidy = re.search('(<=RH: )([0-9]*)', text)
+			humitidy = re.search('(?<=RH: )([0-9]*)', text)
 			record += ' ' + (humitidy.group(0) if humitidy else '0')
 	file.close()
 	return record
